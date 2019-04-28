@@ -14,7 +14,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using static AngularAPI2_2.Controllers.SampleDataController;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace AngularAPI2_2.Controllers
 {
@@ -30,12 +31,15 @@ namespace AngularAPI2_2.Controllers
         private readonly TestContext context;
         private readonly IUserService userService;
         private IMapper mapper;
-        public AuthController(TestContext context, IUserService userService, IMapper mapper)
+        private readonly ApplicationSettings appSettings;
+        public AuthController(TestContext context, IUserService userService, IMapper mapper,IOptions<ApplicationSettings> appSettings)
         {
             this.context = context;
             this.userService = userService;
             this.mapper = mapper;
+            this.appSettings = appSettings.Value;
         }
+
         [HttpPost("[action]")]
         public async Task<ActionResult> Registered([FromBody]RegisteredModel model)
         {
@@ -63,16 +67,16 @@ namespace AngularAPI2_2.Controllers
                 var user = userService.FindUserByAccount(model.Account);
                 if (user != null && userService.CheckPassword(user, model.Password))
                 {
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MySuperSecureKey"));
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appSettings.JWT_Secret));
                     var tokenDescriptor = new SecurityTokenDescriptor
                     {
                         Subject = new ClaimsIdentity(new Claim[]
                         {
-                        new Claim("Account",user.Account),
-                        new Claim("UserName",user.UserName),
-                        new Claim("Email",user.Email)
+                            new Claim("Account",user.Account),
+                            new Claim("UserName",user.UserName),
+                            new Claim("Email",user.Email)
                         }),
-                        Expires = DateTime.UtcNow.AddDays(1),
+                        Expires = DateTime.UtcNow.AddHours(1),
                         SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
                     };
                     var tokenHandler = new JwtSecurityTokenHandler();
@@ -88,7 +92,9 @@ namespace AngularAPI2_2.Controllers
         public BaseResponse TestAuthorize()
         {
             var r = new Random();
-            return new BaseResponse(true, "TestAuthorize msg" + r.Next(0, 100), null);
+            var AccountClaim = User.Claims.Where(c => c.Type == "Account").FirstOrDefault().Value;
+
+            return new BaseResponse(true, "TestAuthorize msg" + r.Next(0, 100)+ AccountClaim, null);
         }
 
         public class RegisteredModel

@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -45,13 +46,17 @@ namespace AngularAPI2_2
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MySuperSecureKey"));
+            var settingsSection = Configuration.GetSection("ApplicationSettings");
+            var settings = settingsSection.Get<ApplicationSettings>();
+            services.Configure<ApplicationSettings>(settingsSection);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.JWT_Secret));
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x => {
+            }).AddJwtBearer(x =>
+            {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = false;
                 x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
@@ -63,8 +68,9 @@ namespace AngularAPI2_2
                     ClockSkew = TimeSpan.Zero
                 };
             });
-            services.AddDbContext<TestContext>();
-            services.AddScoped<IUserService,UserService>();
+            services.AddDbContext<TestContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+            services.AddScoped<IUserService, UserService>();
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -95,7 +101,19 @@ namespace AngularAPI2_2
                 //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, "Api.xml");
                 c.IncludeXmlComments(xmlPath);
-                c.OperationFilter<AuthHeaderFilter>();
+                //c.OperationFilter<AuthHeaderFilter>();
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+                //c.AddSecurityRequirement(new OpenApiSecurityRequirement<string, IEnumerable<string>>
+                //{
+                //    {"Bearer", new string[] { }}
+                //});
             });
         }
 
