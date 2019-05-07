@@ -1,10 +1,10 @@
-﻿using AngularAPI2_2.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using AngularAPI2_2.Models.ResponseModels;
 
 namespace AngularAPI2_2.Middleware
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AngularAPI2_2.DbModels;
 using AngularAPI2_2.Models;
+using AngularAPI2_2.Models.ResponseModels;
 using AngularAPI2_2.Service;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -17,24 +18,19 @@ namespace AngularAPI2_2.Controllers
     [ApiController]
     public class TableController : ControllerBase
     {
-        private readonly TestContext context;
-        private readonly IUserService userService;
-        private IMapper mapper;
+        private readonly ITableService tableService;
         private readonly ApplicationSettings appSettings;
-        public TableController(TestContext context, IUserService userService, IMapper mapper, IOptions<ApplicationSettings> appSettings)
+        public TableController( ITableService tableService, IOptions<ApplicationSettings> appSettings)
         {
-            this.context = context;
-            this.userService = userService;
-            this.mapper = mapper;
+            this.tableService = tableService;
             this.appSettings = appSettings.Value;
         }
         [Authorize]
         [HttpGet("[action]")]
-        public BaseResponse GetArea()
+        public BaseResponse GetAreaWithTables()
         {
-            var Areas = context.Area.ToList();
-            return new BaseResponse(true, "", Areas);
+            List<AreaWithTables> model = tableService.GetAreaWithTables();
+            return new BaseResponse(true, "", model);
         }
-
     }
 }
