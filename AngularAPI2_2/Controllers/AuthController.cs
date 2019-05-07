@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using AngularAPI2_2.Models.ResponseModels;
 
 namespace AngularAPI2_2.Controllers
 {
@@ -96,7 +97,6 @@ namespace AngularAPI2_2.Controllers
 
             return new BaseResponse(true, "TestAuthorize msg" + r.Next(0, 100)+ AccountClaim, null);
         }
-
         public class RegisteredModel
         {
             public string Account { get; set; }

@@ -1,5 +1,5 @@
 ﻿
-namespace AngularAPI2_2.Models
+namespace AngularAPI2_2.Models.ResponseModels
 {
     public class BaseResponse
     {

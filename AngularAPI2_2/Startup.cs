@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -71,6 +72,7 @@ namespace AngularAPI2_2
             services.AddDbContext<TestContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITableService, TableService>();
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -102,7 +104,6 @@ namespace AngularAPI2_2
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, "Api.xml");
                 c.IncludeXmlComments(xmlPath);
                 //c.OperationFilter<AuthHeaderFilter>();
-
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
@@ -115,6 +116,7 @@ namespace AngularAPI2_2
                 //    {"Bearer", new string[] { }}
                 //});
             });
+            services.AddMvc().AddJsonOptions(options => { options.SerializerSettings.ContractResolver = new DefaultContractResolver(); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -163,6 +165,7 @@ namespace AngularAPI2_2
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
         }
     }
 }
