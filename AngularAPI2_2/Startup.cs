@@ -147,7 +147,7 @@ namespace AngularAPI2_2
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
+            app.UseCors();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -162,6 +162,7 @@ namespace AngularAPI2_2
                 spa.Options.SourcePath = "ClientApp";
                 if (env.IsDevelopment())
                 {
+                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
