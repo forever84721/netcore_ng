@@ -20,7 +20,7 @@ namespace AngularAPI2_2.Controllers
     {
         private readonly ITableService tableService;
         private readonly ApplicationSettings appSettings;
-        public TableController( ITableService tableService, IOptions<ApplicationSettings> appSettings)
+        public TableController(ITableService tableService, IOptions<ApplicationSettings> appSettings)
         {
             this.tableService = tableService;
             this.appSettings = appSettings.Value;
@@ -29,8 +29,15 @@ namespace AngularAPI2_2.Controllers
         [HttpGet("[action]")]
         public BaseResponse GetAreaWithTables()
         {
-            List<AreaWithTables> model = tableService.GetAreaWithTables();
+            var ShopId = User.Claims.Where(c => c.Type == "ShopId").FirstOrDefault().Value;
+            List<AreaWithTables> model = tableService.GetAreaWithTables(ShopId);
             return new BaseResponse(true, "", model);
+        }
+        [Authorize]
+        [HttpPost("[action]")]
+        public BaseResponse UpdateAreaWithTables([FromBody]List<AreaWithTables> data)
+        {
+            return tableService.UpdateTables(data);
         }
     }
 }

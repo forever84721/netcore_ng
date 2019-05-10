@@ -1,1 +1,22 @@
 Scaffold-DbContext "Server=.;Database=Test;User Id=sa;password=22675109;MultipleActiveResultSets=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir DbModels -Force
+
+Scaffold-DbContext "Server=192.168.20.11;Database=Test;User Id=sa;password=P@ssw0rd;MultipleActiveResultSets=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir DbModels -Force
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -5,9 +5,10 @@ namespace AngularAPI2_2.DbModels
 {
     public partial class Table
     {
+        public string ShopId { get; set; }
+        public string AreaId { get; set; }
         public string TableId { get; set; }
         public string TableName { get; set; }
-        public string AreaId { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public int Width { get; set; }

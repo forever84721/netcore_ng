@@ -15,19 +15,37 @@ namespace AngularAPI2_2.Service.Impl
         {
             this.context = context;
         }
-        public List<AreaWithTables> GetAreaWithTables()
+        public List<AreaWithTables> GetAreaWithTables(string ShopId)
         {
             var model = new List<AreaWithTables>();
-            foreach (var area in context.Area.ToList())
+            foreach (var area in context.Area.Where(a => a.ShopId.Equals(ShopId)).ToList())
             {
                 var areawithtable = new AreaWithTables
                 {
                     Area = area,
-                    Tables = context.Table.Where(a => a.AreaId.Equals(area.AreaId)).ToList()
+                    Tables = context.Table.Where(a => a.ShopId.Equals(ShopId) && a.AreaId.Equals(area.AreaId)).ToList()
                 };
                 model.Add(areawithtable);
             }
             return model;
+        }
+        public BaseResponse UpdateTables(List<AreaWithTables> data)
+        {
+            BaseResponse response = new BaseResponse();
+            try
+            {
+                foreach (var area in data)
+                {
+                    context.Table.UpdateRange(area.Tables);
+                }
+                context.SaveChanges();
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Msg = ex.ToString();
+            }
+            return response;
         }
         ~TableService()
         {

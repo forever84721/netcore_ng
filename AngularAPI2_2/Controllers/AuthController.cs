@@ -33,7 +33,7 @@ namespace AngularAPI2_2.Controllers
         private readonly IUserService userService;
         private IMapper mapper;
         private readonly ApplicationSettings appSettings;
-        public AuthController(TestContext context, IUserService userService, IMapper mapper,IOptions<ApplicationSettings> appSettings)
+        public AuthController(TestContext context, IUserService userService, IMapper mapper, IOptions<ApplicationSettings> appSettings)
         {
             this.context = context;
             this.userService = userService;
@@ -75,7 +75,8 @@ namespace AngularAPI2_2.Controllers
                         {
                             new Claim("Account",user.Account),
                             new Claim("UserName",user.UserName),
-                            new Claim("Email",user.Email)
+                            new Claim("Email",user.Email),
+                            new Claim("ShopId",user.ShopId)
                         }),
                         Expires = DateTime.UtcNow.AddHours(1),
                         SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
@@ -95,7 +96,7 @@ namespace AngularAPI2_2.Controllers
             var r = new Random();
             var AccountClaim = User.Claims.Where(c => c.Type == "Account").FirstOrDefault().Value;
 
-            return new BaseResponse(true, "TestAuthorize msg" + r.Next(0, 100)+ AccountClaim, null);
+            return new BaseResponse(true, "TestAuthorize msg" + r.Next(0, 100) + AccountClaim, null);
         }
         public class RegisteredModel
         {
