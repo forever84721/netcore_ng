@@ -9,8 +9,8 @@ namespace AngularAPI2_2.Service.Impl
     public class UserService : IUserService, IDisposable
     {
         private bool disposedValue = false;
-        private TestContext context;
-        public UserService(TestContext context)
+        private readonly WebPOSContext context;
+        public UserService(WebPOSContext context)
         {
             this.context = context;
         }

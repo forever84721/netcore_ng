@@ -29,11 +29,11 @@ namespace AngularAPI2_2.Controllers
     [Route("api/[controller]")]
     public class AuthController : Controller
     {
-        private readonly TestContext context;
+        private readonly WebPOSContext context;
         private readonly IUserService userService;
-        private IMapper mapper;
+        private readonly IMapper mapper;
         private readonly ApplicationSettings appSettings;
-        public AuthController(TestContext context, IUserService userService, IMapper mapper, IOptions<ApplicationSettings> appSettings)
+        public AuthController(WebPOSContext context, IUserService userService, IMapper mapper, IOptions<ApplicationSettings> appSettings)
         {
             this.context = context;
             this.userService = userService;

@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace AngularAPI2_2.DbModels
 {
-    public partial class TestContext : DbContext
+    public partial class WebPOSContext : DbContext
     {
-        public TestContext()
+        public WebPOSContext()
         {
         }
 
-        public TestContext(DbContextOptions<TestContext> options)
+        public WebPOSContext(DbContextOptions<WebPOSContext> options)
             : base(options)
         {
         }
@@ -24,7 +24,7 @@ namespace AngularAPI2_2.DbModels
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=192.168.20.11;Database=Test;User Id=sa;password=P@ssw0rd;MultipleActiveResultSets=True;");
+                optionsBuilder.UseSqlServer("Server=.;Database=WebPOS;User Id=sa;password=22675109;MultipleActiveResultSets=True;");
             }
         }
 

@@ -10,15 +10,15 @@ namespace AngularAPI2_2.Service.Impl
     public class TableService : ITableService, IDisposable
     {
         private bool disposedValue = false;
-        private TestContext context;
-        public TableService(TestContext context)
+        private readonly WebPOSContext context;
+        public TableService(WebPOSContext context)
         {
             this.context = context;
         }
         public List<AreaWithTables> GetAreaWithTables(string ShopId)
         {
             var model = new List<AreaWithTables>();
-            foreach (var area in context.Area.Where(a => a.ShopId.Equals(ShopId)).ToList())
+            foreach (var area in context.Area.Where(a => a.ShopId.Equals(ShopId)).OrderBy(a => a.Seq).ToList())
             {
                 var areawithtable = new AreaWithTables
                 {
@@ -34,8 +34,11 @@ namespace AngularAPI2_2.Service.Impl
             BaseResponse response = new BaseResponse();
             try
             {
+                int index = 1;
                 foreach (var area in data)
                 {
+                    area.Area.Seq = index++;
+                    context.Area.Update(area.Area);
                     context.Table.UpdateRange(area.Tables);
                 }
                 context.SaveChanges();

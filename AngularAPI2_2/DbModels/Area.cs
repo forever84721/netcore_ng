@@ -8,5 +8,6 @@ namespace AngularAPI2_2.DbModels
         public string ShopId { get; set; }
         public string AreaId { get; set; }
         public string AreaName { get; set; }
+        public int Seq { get; set; }
     }
 }
