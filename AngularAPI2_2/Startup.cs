@@ -46,6 +46,15 @@ namespace AngularAPI2_2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    "CorsPolicy",
+                    builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             var settingsSection = Configuration.GetSection("ApplicationSettings");
             var settings = settingsSection.Get<ApplicationSettings>();
@@ -73,6 +82,7 @@ namespace AngularAPI2_2
                 options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITableService, TableService>();
+            services.AddScoped<IFunctionButtonService, FunctionButtonService>();
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -132,6 +142,7 @@ namespace AngularAPI2_2
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseCors("CorsPolicy");
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
