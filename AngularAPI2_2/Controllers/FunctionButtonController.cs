@@ -27,5 +27,11 @@ namespace AngularAPI2_2.Controllers
             var model = functionButtonService.GetFunctionButtonsByType(FunctionGroupType.Function);
             return new BaseResponse(true, "", model);
         }
+        [HttpGet("[action]")]
+        public BaseResponse GetDataSettingButtons()
+        {
+            var model = functionButtonService.GetFunctionButtonsByType(FunctionGroupType.DataSetting);
+            return new BaseResponse(true, "", model);
+        }
     }
 }

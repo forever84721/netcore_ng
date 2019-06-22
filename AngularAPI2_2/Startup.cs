@@ -80,6 +80,7 @@ namespace AngularAPI2_2
             });
             services.AddDbContext<WebPOSContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITableService, TableService>();
             services.AddScoped<IFunctionButtonService, FunctionButtonService>();

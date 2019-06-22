@@ -78,7 +78,7 @@ namespace AngularAPI2_2.Controllers
                             new Claim("Email",user.Email),
                             new Claim("ShopId",user.ShopId)
                         }),
-                        Expires = DateTime.UtcNow.AddHours(1),
+                        Expires = DateTime.UtcNow.AddMinutes(2),
                         SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
                     };
                     var tokenHandler = new JwtSecurityTokenHandler();
