@@ -8,7 +8,7 @@ namespace AngularAPI2_2.Service.Impl
 {
     public class UserService : IUserService, IDisposable
     {
-        private bool disposedValue = false;
+        //private bool disposedValue = false;
         private readonly WebPOSContext context;
         public UserService(WebPOSContext context)
         {
@@ -28,12 +28,16 @@ namespace AngularAPI2_2.Service.Impl
             var PasswordHash = Utility.Utility.PasswordEncoding(Password);
             return User.Password.Equals(PasswordHash);
         }
-
         ~UserService()
         {
-            Dispose();
+            Dispose(false);
         }
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposedValue)
         {
             if (!disposedValue)
             {
@@ -46,6 +50,7 @@ namespace AngularAPI2_2.Service.Impl
                 // TODO: 釋放 Unmanaged 資源 (Unmanaged 物件) 並覆寫下方的完成項。
                 // TODO: 將大型欄位設為 null。
             }
+            //Win32.DestroyHandle(this.CursorFileBitmapIconServiceHandle);
         }
     }
 }

@@ -159,7 +159,7 @@ namespace AngularAPI2_2
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-            app.UseCors();
+            //app.UseCors();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
